@@ -1,0 +1,20 @@
+db.students.insertMany([
+  {
+    name: "John Doe",
+    code: "123456",
+    grades: [
+      { subject: "Math", grade: "A" },
+      { subject: "Science", grade: "B+" },
+      { subject: "English", grade: "A-" },
+    ],
+  },
+  {
+    name: "Jane Smith",
+    code: "654321",
+    grades: [
+      { subject: "Math", grade: "B" },
+      { subject: "Science", grade: "A" },
+      { subject: "English", grade: "B+" },
+    ],
+  },
+]);

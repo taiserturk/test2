@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+</head>
+<body>
+    <h1>Admin Panel</h1>
+    <h2>Import Students from CSV</h2>
+<form id="csvUploadForm" enctype="multipart/form-data">
+    <input type="file" id="csvFile" accept=".csv" required>
+    <button type="submit">Upload CSV</button>
+</form>
+
+<script>
+    document.getElementById('csvUploadForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const csvFile = document.getElementById('csvFile').files[0];
+        const formData = new FormData();
+        formData.append('csvFile', csvFile);
+
+        fetch('/admin/import-csv', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            if (data.error) {
+                console.error(data.error);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+
+    <form id="addStudentForm">
+        <input type="text" id="name" placeholder="Student Name" required>
+        <input type="text" id="code" placeholder="Student Code" required>
+        <input type="number" id="math" placeholder="Math Grade" required>
+        <input type="number" id="science" placeholder="Science Grade" required>
+        <input type="number" id="history" placeholder="History Grade" required>
+        <button type="submit">Add Student</button>
+    </form>
+
+    <script>
+        document.getElementById('addStudentForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const code = document.getElementById('code').value;
+            const grades = {
+                math: parseInt(document.getElementById('math').value),
+                science: parseInt(document.getElementById('science').value),
+                history: parseInt(document.getElementById('history').value)
+            };
+
+            fetch('/admin/add-student', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, code, grades })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                if (data.error) {
+                    console.error(data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

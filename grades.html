@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Grades</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Student Grades</h1>
+        <div id="grade-container">
+            <!-- Grades will be dynamically loaded here -->
+        </div>
+        <button onclick="window.location.href='index.html';">Logout</button>
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const name = urlParams.get('name');
+        const code = urlParams.get('code');
+
+        fetch(`/api/grades?name=${name}&code=${code}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                    window.location.href = 'index.html';
+                } else {
+                    const gradeContainer = document.getElementById('grade-container');
+                    gradeContainer.innerHTML = '';
+
+                    data.forEach(function(subject) {
+                        const gradeDiv = document.createElement('div');
+                        gradeDiv.className = 'grade-item';
+                        gradeDiv.innerHTML = `<strong>${subject.subject}:</strong> ${subject.grade}`;
+                        gradeContainer.appendChild(gradeDiv);
+                    });
+                }
+            })
+            .catch(err => {
+                alert('Failed to retrieve grades. Please try again later.');
+                console.error(err);
+            });
+    });
+</script>
+</body>
+</html>
+
+
+
